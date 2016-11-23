@@ -101,7 +101,7 @@ html, body {
 </style>
 
 <script>
-    if ( !window.requestAnimationFrame ) { // Deze methode vertelt de browser dat je een animatie wilt uitvoeren
+   if ( !window.requestAnimationFrame ) { // Deze methode vertelt de browser dat je een animatie wilt uitvoeren
         window.requestAnimationFrame = ( function() {
             return window.webkitRequestAnimationFrame ||
             window.mozRequestAnimationFrame || //voor Firefox
@@ -213,8 +213,8 @@ html, body {
     var levelCount = 0
     var beginCount = 0
     var lastHit = "platformLinks"
-    var speler3Active = true
-    var speler4Active = true
+    var speler3Active = false
+    var speler4Active = false
     
     setInterval( maakSpel, 40 )   // 40 frames per seconde
    
@@ -227,6 +227,7 @@ html, body {
         //-------------------------------------------------------------------------------//
         w = canvasWidth;  //Breedte van het canvas
         h = canvasHeight;    //Hoogte van het canvas
+
         balkLinks.style.left = (w/100)*5+"px";    //Positie balkLinks
     balkLinks.style.top = (h/2)-(hoogtePlatform/2)+"px";
         balkLinks.style.height = hoogtePlatform+"px";
@@ -245,20 +246,23 @@ html, body {
             document.getElementById('speler2').style.marginTop="275px";
             document.getElementById('speler1').style.marginLeft="150px";
             document.getElementById('speler2').style.marginLeft="-300px";
+            document.getElementById('level').style.marginTop="-10px";
             balkBoven.style.left = (w/2)+"px"; //positie balkBoven
-            balkBoven.style.top = (h/100)*7+"px";
+            balkBoven.style.top = (h/100)*5+"px";
             balkBoven.style.width = breedtePlatform+"px"
             balkBoven.snelheid = {x:0,y:0}
             balkBoven.positie = {x:(w/2)-(breedtePlatform/2),y:(h/8)}
         }
+
         if (speler4Active == true){
             document.getElementById('speler4').style.display="inline";
             document.getElementById('speler1').style.marginTop="270px";
             document.getElementById('speler2').style.marginTop="270px";
             document.getElementById('speler1').style.marginLeft="150px";
             document.getElementById('speler2').style.marginLeft="-300px";
+            document.getElementById('level').style.marginTop="-10px";
             balkOnder.style.left = (w/2)+"px"; //positie balkOnder
-            balkOnder.style.top = (h/100)*90+"px";
+            balkOnder.style.top = (h/100)*95+"px";
             balkOnder.style.width = breedtePlatform+"px"
             balkOnder.snelheid = {x:0,y:0}
             balkOnder.positie = {x:(w/2)-(breedtePlatform/2),y:(h/2)}
@@ -378,9 +382,20 @@ html, body {
                 }
             }
         }
+        if (beginCount == 0){   //Deze if zorgt er voor dat deze onclick actie maar één keer uitgevoerd kan worden
+            score.onclick = function startSpel() {   //Klikken om het spel te beginnen
+                if (beginCount == 0){      //Opnieuw, maar één eer uitvoeren, anders blijft hij in de function zitten
+                    stapX = (canvasWidth/100)*1     //Balsnelheid
+                    stapY = (canvasWidth/100)*1     //Balsnelheid
+                    beginCount = 1
+                }
+            }
+        }
+
         //-------------------------------------------------------------------------------//
         //Worden de platformen geraakt?
         //-------------------------------------------------------------------------------//
+
         //-------------------------------PLATFORM_LINKS----------------------------------//      
         if (lastHit == "platformRechts" || lastHit == "platformBoven" || lastHit == "platformOnder"){
             if(x <= (canvasWidth/100)*5 + straal + 10 && x >= (canvasWidth/100)*5){ //90   // Checken of het linker platform wordt geraakt
@@ -405,6 +420,7 @@ html, body {
                 }
             }
         }
+
         //-------------------------------PLATFORM_RECHTS----------------------------------// 
         if (lastHit == "platformLinks" || lastHit == "platformBoven" || lastHit == "platformOnder"){
             if (x >= (canvasWidth/100)*95 - straal && x <= (canvasWidth/100)*95 + straal + 50){    // Checken of het rechter platform wordt geraakt
@@ -459,20 +475,21 @@ html, body {
                 }
             }
         }
+
         //-------------------------------PLATFORM_ONDER----------------------------------// 
         if (speler4Active == true){
             if (lastHit == "platformLinks" || lastHit == "platformRechts" || lastHit == "platformBoven"){
-                if (y >= 530 && y <= 540){    // Checken of het onder platform wordt geraakt
+                if (y >= 560 && y <= 570){    // Checken of het onder platform wordt geraakt
                     hitCounter++
                     if (hitCounter % 5 == 0){  // Bij elke 5 aanrakingen de balSneller() functie uitoeren
                        balSneller()
                     }
-                    if (x >= balkOnder.positie.x - straal && x <= balkOnder.positie.x && y >= 530 && y <= 540){  //Checken of de bovenkant van het platform geraakt wordt 
+                    if (x >= balkOnder.positie.x - straal && x <= balkOnder.positie.x && y >= 560 && y <= 570){  //Checken of de bovenkant van het platform geraakt wordt 
                        stapY =- stapY
                        stapX =- stapX
                        navigator.vibrate(200);
                     }
-                    if (x <= balkOnder.positie.x + 150 + straal && x >= balkOnder.positie.x + 150 && y >= 530 && y <= 540){     //Checken of de onderkant van het platform geraakt wordt
+                    if (x <= balkOnder.positie.x + 150 + straal && x >= balkOnder.positie.x + 150 && y >= 560 && y <= 570){     //Checken of de onderkant van het platform geraakt wordt
                        stapY =- stapY
                        stapX =- stapX
                        navigator.vibrate(200);
@@ -489,6 +506,7 @@ html, body {
         //-------------------------------------------------------------------------------//
         //Winnaar en verliezer bepalen
         //-------------------------------------------------------------------------------//
+
         if (x <= straal){
             verliezer = "platformLinks"
             winnaar(lastHit)
@@ -497,31 +515,37 @@ html, body {
             verliezer = "platformRechts"
             winnaar(lastHit)
         }
+
         if (speler3Active == false){
             if (y <= straal){
                 stapY =- stapY
             }
         }
+
         if (speler4Active == false){
             if (y >= canvasHeight - straal){
                 stapY =- stapY
             }
         }
+
         if (speler3Active == true){
             if (y <= straal){
                 verliezer = "platformBoven"
                 winnaar(lastHit)
             }
         } 
+
         if (speler4Active == true){
             if (y >= canvasHeight - straal) {
                 verliezer = "platformOnder"
                 winnaar(lastHit)
             }
         }
+
         //-------------------------------------------------------------------------------//
         //Score updaten en bal resetten
         //-------------------------------------------------------------------------------//
+
         function winnaar(winnaar) {
             if (winnaar == "platformRechts") {   // Welke speler heeft gewonnen?
                 speler2Count++
@@ -563,6 +587,7 @@ html, body {
                 console.log("Score speler 4: " + speler4Count)
                 resetBal(verliezer)
             }
+
             function resetBal(verliezer){
                 if (verliezer == "platformRechts"){
                     lastHit = "platformRechts"
@@ -615,9 +640,11 @@ html, body {
             }
         }
    }
+
     //-------------------------------------------------------------------------------//
     //De bal sneller laten bewegen
     //-------------------------------------------------------------------------------//
+
     function balSneller() {    // De snelheid van de bal met 2px verhogen
         levelCount++
         if (stapX > 0) {  // Checken of de X-coördinaat van de bal naar rechts gaat
