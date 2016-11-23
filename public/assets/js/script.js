@@ -269,16 +269,6 @@
         if (speler3Active == false){
             drawMiddelline();
         }
-        
-        if (beginCount == 0){   //Deze if zorgt er voor dat deze onclick actie maar één keer uitgevoerd kan worden
-            mijnCanvasje.onclick = function startSpel() {   //Klikken om het spel te beginnen
-                if (beginCount == 0){      //Opnieuw, maar één eer uitvoeren, anders blijft hij in de function zitten
-                    stapX = (canvasWidth/100)*1     //Balsnelheid
-                    stapY = (canvasWidth/100)*1     //Balsnelheid
-                    beginCount = 1
-                }
-            }
-        }
         if (beginCount == 0){   //Deze if zorgt er voor dat deze onclick actie maar één keer uitgevoerd kan worden
             score.onclick = function startSpel() {   //Klikken om het spel te beginnen
                 if (beginCount == 0){      //Opnieuw, maar één eer uitvoeren, anders blijft hij in de function zitten
@@ -305,7 +295,7 @@
                    stapX =- stapX
                    navigator.vibrate(200);  
                 }
-                if (y <= (balkLinks.positie.y + 75 + hoogtePlatform) + straal &&y >= (balkLinks.positie.y + 75 + hoogtePlatform) && x >= (canvasWidth/100)*5 && x <= (canvasWidth/100)*5 + 10 + straal) {   //Checken of de onderkant van het platform geraakt wordt
+                if (y <= (balkLinks.positie.y + hoogtePlatform) + straal &&y >= (balkLinks.positie.y + hoogtePlatform) && x >= (canvasWidth/100)*5 && x <= (canvasWidth/100)*5 + 10 + straal) {   //Checken of de onderkant van het platform geraakt wordt
                    stapY =- stapY
                    stapX =- stapX
                    navigator.vibrate(200);  
@@ -330,7 +320,7 @@
                    stapX =- stapX
                    navigator.vibrate(200);  
                 }
-                if (y <= (balkRechts.positie.y + 75 - hoogtePlatform) + straal && y >= (balkRechts.positie.y + 75 - hoogtePlatform) && x >= (canvasWidth/100)*95 - 10 - straal && x <= (canvasWidth/100)*95) {     //Checken of de onderkant van het platform geraakt wordt
+                if (y <= (balkRechts.positie.y + hoogtePlatform) + straal && y >= (balkRechts.positie.y + hoogtePlatform) && x >= (canvasWidth/100)*95 - 10 - straal && x <= (canvasWidth/100)*95) {     //Checken of de onderkant van het platform geraakt wordt
                    stapY =- stapY
                    stapX =- stapX
                    navigator.vibrate(200);  
@@ -435,6 +425,7 @@
         if (speler4Active == true){
             if (y >= canvasHeight - straal) {
                 verliezer = "platformOnder"
+                console.log("onderkantGeraakt!")
                 winnaar(lastHit)
             }
         }
@@ -490,7 +481,7 @@
                     lastHit = "platformRechts"
                     x = (w/100)*75    // Set bal X-as positie
                     y = h/2     // Set bal Y-as positie
-                    mijnCanvasje.onclick = function beginSpelLinks() {      //De functie beginSpelRechts() uitvoeren als er op het canvas geklikt wordt
+                    score.onclick = function beginSpelLinks() {      //De functie beginSpelRechts() uitvoeren als er op het canvas geklikt wordt
                         if (anderGetal == 0) {      //Deze if zorgt er voor dat je maar één keer de onclick actie kan uitvoeren
                             stapX = -(canvasWidth/100)*1
                             stapY = -(canvasWidth/100)*1
@@ -502,7 +493,7 @@
                     lastHit = "platformLinks"
                     x = (w/100)*25  // Set bal X-as positie
                     y = h/2     // Set bal Y-as positie
-                    mijnCanvasje.onclick = function beginSpelRechts() {     //De functie beginSpelRechts() uitvoeren als er op het canvas geklikt wordt
+                    score.onclick = function beginSpelRechts() {     //De functie beginSpelRechts() uitvoeren als er op het canvas geklikt wordt
                         if (anderGetal == 0) {      //Deze if zorgt er voor dat je maar één keer de onclick actie kan uitvoeren
                             stapX = (canvasWidth/100)*1
                             stapY = (canvasWidth/100)*1
@@ -514,7 +505,7 @@
                     lastHit = "PlatformBoven"
                     x = w/2    // Set bal X-as positie
                     y = (h/100)*25     // Set bal Y-as positie
-                    mijnCanvasje.onclick = function beginSpelBoven() {      //De functie beginSpelRechts() uitvoeren als er op het canvas geklikt wordt
+                    score.onclick = function beginSpelBoven() {      //De functie beginSpelRechts() uitvoeren als er op het canvas geklikt wordt
                         if (anderGetal == 0) {      //Deze if zorgt er voor dat je maar één keer de onclick actie kan uitvoeren
                             stapX = (canvasWidth/100)*1
                             stapY = (canvasWidth/100)*1
@@ -526,7 +517,7 @@
                     lastHit = "platformOnder"
                     x = w/2    // Set bal X-as positie
                     y = (h/100)*75     // Set bal Y-as positie
-                    mijnCanvasje.onclick = function beginSpelOnder() {      //De functie beginSpelRechts() uitvoeren als er op het canvas geklikt wordt
+                    score.onclick = function beginSpelOnder() {      //De functie beginSpelRechts() uitvoeren als er op het canvas geklikt wordt
                         if (anderGetal == 0) {      //Deze if zorgt er voor dat je maar één keer de onclick actie kan uitvoeren
                             stapX = -(canvasWidth/100)*1
                             stapY = -(canvasWidth/100)*1
