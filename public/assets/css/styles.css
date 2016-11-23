@@ -3,7 +3,7 @@ html, body {
    height: 100%;
    margin: 0px;
 }
-#c{
+div#canvas{
     width: 1000px;
     margin: 0 auto;    
 }
@@ -15,14 +15,14 @@ html, body {
    transition: all;
    position: absolute;
    width: 10px;
-   background: #fff;
+   background: white;
 }
 #balkLinks{
    -webkit-transition: all;
    transition: all;
    position:absolute;
    width:10px;
-   background: #fff;
+   background: white;
 }
     /*//-------------------------------------------------------------------------------//*/
 #balkBoven{
@@ -30,14 +30,14 @@ html, body {
    transition: all;
    position:absolute;
    height: 10px;
-   background: #fff;
+   background: white;
 }
 #balkOnder{
    -webkit-transition: all;
    transition: all;
    position:absolute;
    height:10px;
-   background: #fff;
+   background: white;
 }
     /*//-------------------------------------------------------------------------------//*/
 #score{

@@ -1,4 +1,5 @@
- if ( !window.requestAnimationFrame ) { // Deze methode vertelt de browser dat je een animatie wilt uitvoeren
+
+    if ( !window.requestAnimationFrame ) { // Deze methode vertelt de browser dat je een animatie wilt uitvoeren
         window.requestAnimationFrame = ( function() {
             return window.webkitRequestAnimationFrame ||
             window.mozRequestAnimationFrame || //voor Firefox
@@ -31,17 +32,21 @@
         theContext.stroke();
     }
     //-------------------------------------------------------------------------------//
-    function drawPlatform3(x, y) {   // Tekent het platform rechts
-        theContext.beginPath();
-        theContext.rect(platform3X, platform3Y, breedtePlatform, 10)
-        theContext.closePath();
-        theContext.stroke();
+    if (speler3Active == true){
+        function drawPlatform3(x, y) {   // Tekent het platform rechts
+            theContext.beginPath();
+            theContext.rect(platform3X, platform3Y, breedtePlatform, 10)
+            theContext.closePath();
+            theContext.stroke();
+        }
     }
-    function drawPlatform4(x, y) {   // Tekent het platform rechts
-        theContext.beginPath();
-        theContext.rect(platform4X, platform4Y, breedtePlatform, 10)
-        theContext.closePath();
-        theContext.stroke();
+    if (speler4Active == true){
+        function drawPlatform4(x, y) {   // Tekent het platform rechts
+            theContext.beginPath();
+            theContext.rect(platform4X, platform4Y, breedtePlatform, 10)
+            theContext.closePath();
+            theContext.stroke();
+        }
     }
     //-------------------------------------------------------------------------------//
     function drawMiddelline(){
@@ -69,13 +74,13 @@
     }
     resizeCanvas();
  
-    var x = 200;  // houdt de veranderende horizontale positie bij
-    var y = 300;  // houd de veranderende verticale positie bij
+    var x = (canvasWidth/100)*25;  // houdt de veranderende horizontale positie bij
+    var y = (canvasHeight/2);  // houd de veranderende verticale positie bij
     var frameTeller = 0;
     var stapX = 0//(canvasWidth/100)*1;    // De X-as snelheid (in frames) per seconde
     var stapY = 0//(canvasWidth/100)*1;    // De Y-as snelheid (in frames) per seconde
     var straal = 10;  // De straal van de bal
-    var hoogtePlatform = 90;   // De hoogte van de platform (in pixels)
+    var hoogtePlatform = (canvasHeight/100)*15;   // De hoogte van de platform (in pixels)
     // var platform1X = (canvasWidth/100)*5    // Beginpositie X-as platform links
     var platform1Y    // Beginpositie Y-as (niet ingesteld)
     var onderkantPlatform1
@@ -85,7 +90,7 @@
     var onderkantPlatform2
     var bovenkantPlatform2
     //-------------------------------------------------------------------------------//
-    var breedtePlatform = 150;   // De breedte van de platform (in pixels)
+    var breedtePlatform = (canvasWidth/100)*15;   // De breedte van de platform (in pixels)
     var platform3X    // Beginpositie X-as platform rechts
     var platform3Y     // Beginpositie Y-as platform rechts
     var onderkantPlatform3
@@ -98,7 +103,12 @@
     var hitCounter = 0   // Variable die bijhoud hoe vaak de bal op het platform komt
     var speler1Count = 0    // Variable die bijhoud hoe veel punten speler 1 heeft
     var speler2Count = 0    // Variable die bijhoud hoe veel punten speler 2 heeft
+    var speler3Count = 0
+    var speler4Count = 0
     var beginCount = 0
+    var lastHit = "platformLinks"
+    var speler3Active = false
+    var speler4Active = false
     
     setInterval( maakSpel, 40 )   // 40 frames per seconde
    
@@ -111,28 +121,34 @@
         //-------------------------------------------------------------------------------//
         w = canvasWidth;  //Breedte van het canvas
         h = canvasHeight;    //Hoogte van het canvas
-        balkLinks.style.left = 50 +"px";    //Positie balkLinks
-        balkLinks.style.top = 300 +"px";
+
+        balkLinks.style.left = (w/100)*5+"px";    //Positie balkLinks
+        balkLinks.style.top = (h/2)+"px";
         balkLinks.style.height = hoogtePlatform+"px";
         balkLinks.snelheid = {x:0,y:0}
-        balkLinks.positie = {x:0,y:300}
+        balkLinks.positie = {x:0,y:h/2}
    
-        balkRechts.style.left = 950+"px"; //positie balkRechts
-        balkRechts.style.top = 300+"px";
+        balkRechts.style.left = (w/100)*95+"px"; //positie balkRechts
+        balkRechts.style.top = (h/2)+"px";
         balkRechts.style.height = hoogtePlatform+"px";
         balkRechts.snelheid = {x:0,y:0}
-        balkRechts.positie = {x:0,y:300}
+        balkRechts.positie = {x:0,y:h/2}
         //-------------------------------------------------------------------------------//
-        balkBoven.style.left = 500+"px"; //positie balkBoven
-        balkBoven.style.top = 75+"px";
-        balkBoven.style.width = breedtePlatform+"px"
-        balkBoven.snelheid = {x:0,y:0}
-        balkBoven.positie = {x:500-(breedtePlatform/2),y:75}
-        balkOnder.style.left = 500+"px"; //positie balkOnder
-        balkOnder.style.top = 300+"px";
-        balkOnder.style.width = breedtePlatform+"px"
-        balkOnder.snelheid = {x:0,y:0}
-        balkOnder.positie = {x:500-(breedtePlatform/2),y:300}
+        if (speler3Active == true){
+            balkBoven.style.left = (w/2)+"px"; //positie balkBoven
+            balkBoven.style.top = (h/100)*5+"px";
+            balkBoven.style.width = breedtePlatform+"px"
+            balkBoven.snelheid = {x:0,y:0}
+            balkBoven.positie = {x:(w/2)-(breedtePlatform/2),y:(h/8)}
+        }
+
+        if (speler4Active == true){
+            balkOnder.style.left = (w/2)+"px"; //positie balkOnder
+            balkOnder.style.top = (h/100)*95+"px";
+            balkOnder.style.width = breedtePlatform+"px"
+            balkOnder.snelheid = {x:0,y:0}
+            balkOnder.positie = {x:(w/2)-(breedtePlatform/2),y:(h/2)}
+        }
         //-------------------------------------------------------------------------------//
     
         if (window.DeviceOrientationEvent) {
@@ -141,10 +157,14 @@
                 balkLinks.snelheid.x = Math.round(event.gamma);
                 balkRechts.snelheid.y = Math.round(event.beta); //beta is je mobiel kantelen via de lengte.
                 balkRechts.snelheid.x = Math.round(event.gamma); //gamma is je mobiel kantelen via de breedte.
-                balkBoven.snelheid.y = Math.round(event.beta);
-                balkBoven.snelheid.x = Math.round(event.gamma);
-                balkOnder.snelheid.y = Math.round(event.beta);
-                balkOnder.snelheid.x = Math.round(event.gamma);
+                if (speler3Active == true){
+                    balkBoven.snelheid.y = Math.round(event.beta);
+                    balkBoven.snelheid.x = Math.round(event.gamma);
+                }
+                if (speler4Active == true){
+                    balkOnder.snelheid.y = Math.round(event.beta);
+                    balkOnder.snelheid.x = Math.round(event.gamma);
+                }
             } )
         }; 
         update();
@@ -153,8 +173,12 @@
         balkLinks.positie.y += (balkLinks.snelheid.y / 2);    //Verplaatsing van het linker platform
         balkRechts.positie.y += (balkRechts.snelheid.y / 2);  //Verplaatsing van het rechter platform
         //-------------------------------------------------------------------------------//
-        balkBoven.positie.x += (balkBoven.snelheid.x / 2);  //Verplaatsing van het bovenste platform
-        balkOnder.positie.x += (balkOnder.snelheid.x / 2);  //Verplaatsing van het onderste platform
+        if (speler3Active == true){
+            balkBoven.positie.x += (balkBoven.snelheid.x / 2);  //Verplaatsing van het bovenste platform
+        }
+        if (speler4Active == true){
+            balkOnder.positie.x += (balkOnder.snelheid.x / 2);  //Verplaatsing van het onderste platform
+        }
         //-------------------------------------------------------------------------------//
         if (balkLinks.positie.y < 0 && balkLinks.snelheid.y < 0){   //bovenkant platform links
             balkLinks.positie.y = 0;
@@ -169,17 +193,21 @@
             balkRechts.positie.y = canvasHeight - hoogtePlatform;
         }
         //-------------------------------------------------------------------------------//
-        if (balkBoven.positie.x < 0 && balkBoven.snelheid.x < 0){ //bovenkant platform Boven
-            balkBoven.positie.x = 0;
+        if (speler3Active == true){
+            if (balkBoven.positie.x < 0 && balkBoven.snelheid.x < 0){ //bovenkant platform Boven
+                balkBoven.positie.x = 0;
+            }
+            if (balkBoven.positie.x > canvasWidth - breedtePlatform && balkBoven.snelheid.x > 0){ //onderkant platform Boven
+                balkBoven.positie.x = canvasWidth - breedtePlatform;
+            }
         }
-        if (balkBoven.positie.x > canvasWidth - breedtePlatform && balkBoven.snelheid.x > 0){ //onderkant platform Boven
-            balkBoven.positie.x = canvasWidth - breedtePlatform;
-        }
-        if (balkOnder.positie.x < 0 && balkOnder.snelheid.x < 0){ //bovenkant platform Onder
-            balkOnder.positie.x = 0;
-        }
-        if (balkOnder.positie.x > canvasWidth - breedtePlatform && balkOnder.snelheid.x > 0){ //onderkant platform Onder
-            balkOnder.positie.x = canvasWidth - breedtePlatform;
+        if (speler4Active == true){
+            if (balkOnder.positie.x < 0 && balkOnder.snelheid.x < 0){ //bovenkant platform Onder
+                balkOnder.positie.x = 0;
+            }
+            if (balkOnder.positie.x > canvasWidth - breedtePlatform && balkOnder.snelheid.x > 0){ //onderkant platform Onder
+                balkOnder.positie.x = canvasWidth - breedtePlatform;
+            }
         }
         //-------------------------------------------------------------------------------//
         balkLinks.style.top = balkLinks.positie.y + "px"   //De positie bepalen van de linker balk
@@ -189,12 +217,16 @@
         platform2X = balkRechts.positie.x + 75
         platform2Y = balkRechts.positie.y + 75
         //-------------------------------------------------------------------------------//
-        balkBoven.style.left = balkBoven.positie.x + "px"    //De positie bepalen van de boven balk
-        platform3X = balkBoven.positie.x + 0
-        platform3Y = balkBoven.positie.y + 0
-        balkOnder.style.left = balkOnder.positie.x + "px"    //De positie bepalen van de onder balk
-        platform4X = balkOnder.positie.x + 0
-        platform4Y = balkOnder.positie.y + 0
+        if (speler3Active == true){
+            balkBoven.style.left = balkBoven.positie.x + "px"    //De positie bepalen van de boven balk
+            platform3X = balkBoven.positie.x + 0
+            platform3Y = balkBoven.positie.y + 0
+        }
+        if (speler4Active == true){
+            balkOnder.style.left = balkOnder.positie.x + "px"    //De positie bepalen van de onder balk
+            platform4X = balkOnder.positie.x + 0
+            platform4Y = balkOnder.positie.y + 0
+        }
         //-------------------------------------------------------------------------------//
         requestAnimationFrame( update );    //KEEP ANIMATING
     }
@@ -204,10 +236,14 @@
         bovenkantPlatform2 = balkRechts.positie.y + 75     //Bovenkant van het rechter platform berekenen
         onderkantPlatform2 = balkRechts.positie.y + 75 + hoogtePlatform   //Onderkant van het rechter platform
         //-------------------------------------------------------------------------------//
-        onderkantPlatform3 = balkBoven.positie.x + 0 + breedtePlatform   //Onderkant van het linker platform berekenen
-        bovenkantPlatform3 = balkBoven.positie.x + 0      //Bovenkant van het linker platform berekenen
-        onderkantPlatform4 = balkOnder.positie.x + 0 + breedtePlatform   //Onderkant van het rechter platform
-        bovenkantPlatform4 = balkOnder.positie.x + 0     //Bovenkant van het rechter platform berekenen
+        if (speler3Active == true){
+            onderkantPlatform3 = balkBoven.positie.x + 0 + breedtePlatform   //Onderkant van het linker platform berekenen
+            bovenkantPlatform3 = balkBoven.positie.x + 0      //Bovenkant van het linker platform berekenen
+        }
+        if (speler4Active == true){
+            onderkantPlatform4 = balkOnder.positie.x + 0 + breedtePlatform   //Onderkant van het rechter platform
+            bovenkantPlatform4 = balkOnder.positie.x + 0     //Bovenkant van het rechter platform berekenen
+        }
         //-------------------------------------------------------------------------------//
         
         frameTeller++;
@@ -215,163 +251,271 @@
         y += stapY;
         theContext.clearRect(0,0,canvasWidth,canvasHeight);    // wis het canvas
         drawDisc( x, y, straal );
-        drawMiddelline();
+        if (speler3Active == false){
+            drawMiddelline();
+        }
         
         if (beginCount == 0){   //Deze if zorgt er voor dat deze onclick actie maar één keer uitgevoerd kan worden
             mijnCanvasje.onclick = function startSpel() {   //Klikken om het spel te beginnen
                 if (beginCount == 0){      //Opnieuw, maar één eer uitvoeren, anders blijft hij in de function zitten
-                    stapX = 10*1     //Balsnelheid
-                    stapY = 10*1     //Balsnelheid
+                    stapX = (canvasWidth/100)*1     //Balsnelheid
+                    stapY = (canvasWidth/100)*1     //Balsnelheid
                     beginCount = 1
                 }
             }
         }
-      
-        if (hitCounter % 2 != 0) {
-            if(x <= 50 + straal + 10 && x >= 50){   // Checken of het linker platform wordt geraakt 
+
+        //-------------------------------------------------------------------------------//
+        //Worden de platformen geraakt?
+        //-------------------------------------------------------------------------------//
+
+        //-------------------------------PLATFORM_LINKS----------------------------------//      
+        if (lastHit == "platformRechts" || lastHit == "platformBoven" || lastHit == "platformOnder"){
+            if(x <= (canvasWidth/100)*5 + straal + 10 && x >= (canvasWidth/100)*5){ //90   // Checken of het linker platform wordt geraakt
                 hitCounter++
                 if (hitCounter % 5 == 0) {    // Bij elke 5 aanrakingen de balSneller() functie uitoeren
                     balSneller()
                 }
-                if (y >= (balkLinks.positie.y) - straal && y <= (balkLinks.positie.y) && x >= 50 && x <= 50 + 10 + straal){   //Checken of de bovenkant van het platform geraakt wordt
+                if (y >= (balkLinks.positie.y) - straal && y <= (balkLinks.positie.y) && x >= (canvasWidth/100)*5 && x <= (canvasWidth/100)*5 + 10 + straal){   //Checken of de bovenkant van het platform geraakt wordt
                    stapY =- stapY
                    stapX =- stapX
                    navigator.vibrate(200);  
                 }
-                if (y <= (balkLinks.positie.y + 75 + hoogtePlatform) + straal &&y >= (balkLinks.positie.y + 75 + hoogtePlatform) && x >= 50 && x <= 50 + 10 + straal) {   //Checken of de onderkant van het platform geraakt wordt
+                if (y <= (balkLinks.positie.y + 75 + hoogtePlatform) + straal &&y >= (balkLinks.positie.y + 75 + hoogtePlatform) && x >= (canvasWidth/100)*5 && x <= (canvasWidth/100)*5 + 10 + straal) {   //Checken of de onderkant van het platform geraakt wordt
                    stapY =- stapY
                    stapX =- stapX
                    navigator.vibrate(200);  
                 }
                 if (y <= balkLinks.positie.y + 95 && y > balkLinks.positie.y){    //Checken of het midden van het platform geraakt wordt
-                   stapX =- stapX
-                   navigator.vibrate(200);  
+                    lastHit = "platformLinks" 
+                    stapX =- stapX
+                    navigator.vibrate(200);  
                 }
             }
         }
-        if (hitCounter % 2 == 0){
-            if (x >= 950 - straal && x <= 950 + straal + 50){    // Checken of het rechter platform wordt geraakt
+
+        //-------------------------------PLATFORM_RECHTS----------------------------------// 
+        if (lastHit == "platformLinks" || lastHit == "platformBoven" || lastHit == "platformOnder"){
+            if (x >= (canvasWidth/100)*95 - straal && x <= (canvasWidth/100)*95 + straal + 50){    // Checken of het rechter platform wordt geraakt
                 hitCounter++
                 if (hitCounter % 5 == 0){  // Bij elke 5 aanrakingen de balSneller() functie uitoeren
                    balSneller()
                 }
-                if (y >= (balkRechts.positie.y) - straal && y <= (balkRechts.positie.y) && x >= 950 - 10 - straal && x <= 950){  //Checken of de bovenkant van het platform geraakt wordt 
+                if (y >= (balkRechts.positie.y) - straal && y <= (balkRechts.positie.y) && x >= (canvasWidth/100)*95 - 10 - straal && x <= (canvasWidth/100)*95){  //Checken of de bovenkant van het platform geraakt wordt 
                    stapY =- stapY
                    stapX =- stapX
                    navigator.vibrate(200);  
                 }
-                if (y <= (balkRechts.positie.y + 75 - hoogtePlatform) + straal && y >= (balkRechts.positie.y + 75 - hoogtePlatform) && x >= 950 - 10 - straal && x <= 950) {     //Checken of de onderkant van het platform geraakt wordt
+                if (y <= (balkRechts.positie.y + 75 - hoogtePlatform) + straal && y >= (balkRechts.positie.y + 75 - hoogtePlatform) && x >= (canvasWidth/100)*95 - 10 - straal && x <= (canvasWidth/100)*95) {     //Checken of de onderkant van het platform geraakt wordt
                    stapY =- stapY
                    stapX =- stapX
                    navigator.vibrate(200);  
                 }
                 if (y <= balkRechts.positie.y + 95 && y >= balkRechts.positie.y) {     //Checken of het midden van het platform geraatk wordt
+                    lastHit = "platformRechts"
                    stapX = -stapX
                    navigator.vibrate(200);  
                 }
             }
         }
-        //-------------------------------------------------------------------------------//
-        if (hitCounter % 2 == 0){
-            if (x >= 950 - straal && x <= 950 + straal + 50){    // Checken of het rechter platform wordt geraakt
-                hitCounter++
-                if (hitCounter % 5 == 0){  // Bij elke 5 aanrakingen de balSneller() functie uitoeren
-                   balSneller()
-                }
-                if (y >= (balkBoven.positie.y) - straal && y <= (balkBoven.positie.y) && x >= 950 - 10 - straal && x <= 950){  //Checken of de bovenkant van het platform geraakt wordt 
-                   stapY =- stapY
-                   stapX =- stapX
-                   navigator.vibrate(200);  
-                }
-                if (y <= (balkBoven.positie.y + 75 - hoogtePlatform) + straal && y >= (balkBoven.positie.y + 75 - hoogtePlatform) && x >= 950 - 10 - straal && x <= 950) {     //Checken of de onderkant van het platform geraakt wordt
-                   stapY =- stapY
-                   stapX =- stapX
-                   navigator.vibrate(200);  
-                }
-                if (y <= balkBoven.positie.y + 95 && y >= balkBoven.positie.y) {     //Checken of het midden van het platform geraatk wordt
-                   stapX = -stapX
-                   navigator.vibrate(200);  
-                }
-            }
-        }
-        if (hitCounter % 2 == 0){
-            if (x >= 950 - straal && x <= 950 + straal + 50){    // Checken of het rechter platform wordt geraakt
-                hitCounter++
-                if (hitCounter % 5 == 0){  // Bij elke 5 aanrakingen de balSneller() functie uitoeren
-                   balSneller()
-                }
-                if (y >= (balkOnder.positie.y) - straal && y <= (balkOnder.positie.y) && x >= 950 - 10 - straal && x <= 950){  //Checken of de bovenkant van het platform geraakt wordt 
-                   stapY =- stapY
-                   stapX =- stapX
-                   navigator.vibrate(200);  
-                }
-                if (y <= (balkOnder.positie.y + 75 - hoogtePlatform) + straal && y >= (balkOnder.positie.y + 75 - hoogtePlatform) && x >= 950 - 10 - straal && x <= 950) {     //Checken of de onderkant van het platform geraakt wordt
-                   stapY =- stapY
-                   stapX =- stapX
-                   navigator.vibrate(200);  
-                }
-                if (y <= balkOnder.positie.y + 95 && y >= balkOnder.positie.y) {     //Checken of het midden van het platform geraatk wordt
-                   stapX = -stapX
-                   navigator.vibrate(200);  
-                }
-            }
-        }
-        //-------------------------------------------------------------------------------//
-        if ( y >= canvasHeight - straal || y <= straal ){    // Checken of de boven en onderkant van het canvas wordt geraakt
-            stapY = -stapY;
-        }
-        if ( x <= 0 || x >= canvasWidth){  // Checken of de bal langs een platform gaat
-            if (x <= 0){   // Gaat de bal voorbij aan speler 1, dan wint speler 2
-                navigator.vibrate(500);
-                speler2Count++    // Punt er bij voor speler 2
-                document.getElementById("speler1").innerHTML = speler1Count   // Update de score speler 1
-                document.getElementById("speler2").innerHTML = speler2Count   // Update de score speler 2
-                resetBal("speler2")  // Reset de bal positie, speler 2 heeft gewonnen
-            }
-            if (x >= canvasWidth){    // Gaat de bal voorbij aan speler 2, dan wint speler 1
-                navigator.vibrate([200,500,200]);
-                speler1Count++    // Punt er bij voor speler 1
-                document.getElementById("speler1").innerHTML = speler1Count   // Update de score speler 1
-                document.getElementById("speler2").innerHTML = speler2Count   // Update de score speler 2
-                resetBal("speler1")  // Reset de bal positie, speler 1 heeft gewonnen
-            }
-        }
-        //-------------------------------------------------------------------------------//
-        //boven en onderkant nog door canvas en spelercount
-        //-------------------------------------------------------------------------------//
-        function resetBal(winnaar) {
-            if (winnaar == "speler1") {   // Welke speler heeft gewonnen?
-                var anderGetal = 0      //Variable naar 0 zetten
-                x = 800  // Set bal X-as positie
-                y = 300     // Set bal Y-as positie
-                stapX = 0     // Snelheid X-as 5px per sec
-                stapY = 0     // Snelheid Y-as 5px per sec
-                hitCounter = 1    // Reset de hitCounter
-                mijnCanvasje.onclick = function beginSpelRechts() {     //De functie beginSpelRechts() uitvoeren als er op het canvas geklikt wordt
-                    if (anderGetal == 0) {      //Deze if zorgt er voor dat je maar één keer de onclick actie kan uitvoeren
-                        stapX = -(canvasWidth/100)*1
-                        stapY = -(canvasWidth/100)*1
-                        anderGetal = 1
+        
+        //-------------------------------PLATFORM_BOVEN----------------------------------// 
+        if (speler3Active == true){
+            if (lastHit == "platformLinks" || lastHit == "platformRechts" || lastHit == "platformOnder"){
+                if (y >= 40 && y <= 50){ //150    // Checken of het boven platform wordt geraakt
+                    hitCounter++
+                    if (hitCounter % 5 == 0){  // Bij elke 5 aanrakingen de balSneller() functie uitoeren
+                       balSneller()
+                    }
+                    if (x >= balkBoven.positie.x - straal && x <= balkBoven.positie.x && y >= 40 && y <= 50){  //Checken of de bovenkant van het platform geraakt wordt 
+                       stapY =- stapY
+                       stapX =- stapX
+                       navigator.vibrate(200);
+                       console.log("Linker Hoekie")
+                    }
+                    if (x <= balkBoven.positie.x + 150 + straal && x >= balkBoven.positie.x + 150 && y >= 40 && y <= 50) {     //Checken of de onderkant van het platform geraakt wordt
+                       stapY =- stapY
+                       stapX =- stapX
+                       navigator.vibrate(200);
+                       console.log("Rechter Hoekie")  
+                    }
+                    if (x <= balkBoven.positie.x + 150 && x >= balkBoven.positie.x) {     //Checken of het midden van het platform geraatk wordt
+                       stapY = -stapY
+                       navigator.vibrate(200);
+                       //console.log("bovenkant")  
+                       lastHit = "platformBoven"
                     }
                 }
             }
-            if (winnaar == "speler2") {   // Welke speler heeft gewonnen?
+        }
+
+        //-------------------------------PLATFORM_ONDER----------------------------------// 
+        if (speler4Active == true){
+            if (lastHit == "platformLinks" || lastHit == "platformRechts" || lastHit == "platformBoven"){
+                if (y >= 560 && y <= 570){    // Checken of het onder platform wordt geraakt
+                    hitCounter++
+                    if (hitCounter % 5 == 0){  // Bij elke 5 aanrakingen de balSneller() functie uitoeren
+                       balSneller()
+                    }
+                    if (x >= balkOnder.positie.x - straal && x <= balkOnder.positie.x && y >= 560 && y <= 570){  //Checken of de bovenkant van het platform geraakt wordt 
+                       stapY =- stapY
+                       stapX =- stapX
+                       navigator.vibrate(200);
+                    }
+                    if (x <= balkOnder.positie.x + 150 + straal && x >= balkOnder.positie.x + 150 && y >= 560 && y <= 570){     //Checken of de onderkant van het platform geraakt wordt
+                       stapY =- stapY
+                       stapX =- stapX
+                       navigator.vibrate(200);
+                    }
+                    if (x <= balkOnder.positie.x + 150 && x >= balkOnder.positie.x) {     //Checken of het midden van het platform geraatk wordt
+                       stapY = -stapY
+                       navigator.vibrate(200);
+                       lastHit = "platformOnder"
+                    }
+                }
+            }
+        }
+
+        //-------------------------------------------------------------------------------//
+        //Winnaar en verliezer bepalen
+        //-------------------------------------------------------------------------------//
+
+        if (x <= straal){
+            verliezer = "platformLinks"
+            winnaar(lastHit)
+        }
+        if (x >= canvasWidth - straal){
+            verliezer = "platformRechts"
+            winnaar(lastHit)
+        }
+
+        if (speler3Active == false){
+            if (y <= straal){
+                stapY =- stapY
+            }
+        }
+
+        if (speler4Active == false){
+            if (y >= canvasHeight - straal){
+                stapY =- stapY
+            }
+        }
+
+        if (speler3Active == true){
+            if (y <= straal){
+                verliezer = "platformBoven"
+                winnaar(lastHit)
+            }
+        } 
+
+        if (speler4Active == true){
+            if (y >= canvasHeight - straal) {
+                verliezer = "platformOnder"
+                winnaar(lastHit)
+            }
+        }
+
+        //-------------------------------------------------------------------------------//
+        //Score updaten en bal resetten
+        //-------------------------------------------------------------------------------//
+
+        function winnaar(winnaar) {
+            if (winnaar == "platformRechts") {   // Welke speler heeft gewonnen?
+                speler2Count++
+                document.getElementById("speler2").innerHTML = speler2Count   // Update de score speler 1
                 var anderGetal = 0      //Variable naar 0 zetten
-                x = 200    // Set bal X-as positie
-                y = 300     // Set bal Y-as positie
+                stapX = 0     // Snelheid X-as 5px per sec
+                stapY = 0     // Snelheid Y-as 5px per sec
+                hitCounter = 0    // Reset de hitCounter
+                console.log("Score speler 2: " + speler2Count)
+                resetBal(verliezer)
+            }
+            if (winnaar == "platformLinks") {   // Welke speler heeft gewonnen?
+                speler1Count++
+                document.getElementById("speler1").innerHTML = speler1Count   // Update de score speler 1
+                var anderGetal = 0      //Variable naar 0 zetten
                 stapX = 0    // Snelheid X-as 5px per sec
                 stapY = 0   // Snelheid Y-as 5px per sec
                 hitCounter = 0    // Reset de hitCounter
-                mijnCanvasje.onclick = function beginSpelLinks() {      //De functie beginSpelRechts() uitvoeren als er op het canvas geklikt wordt
-                    if (anderGetal == 0) {      //Deze if zorgt er voor dat je maar één keer de onclick actie kan uitvoeren
-                        stapX = 10
-                        stapY = 10
-                        anderGetal = 1
+                console.log("Score speler 1: " + speler1Count)
+                resetBal(verliezer)
+            }
+            if (winnaar == "platformBoven") {   // Welke speler heeft gewonnen?
+                speler3Count++
+                var anderGetal = 0      //Variable naar 0 zetten
+                stapX = 0    // Snelheid X-as 5px per sec
+                stapY = 0   // Snelheid Y-as 5px per sec
+                hitCounter = 0    // Reset de hitCounter
+                console.log("Score speler 3: " + speler3Count)
+                resetBal(verliezer)
+            }
+            if (winnaar == "platformOnder") {   // Welke speler heeft gewonnen?
+                speler4Count++
+                var anderGetal = 0      //Variable naar 0 zetten
+                stapX = 0    // Snelheid X-as 5px per sec
+                stapY = 0   // Snelheid Y-as 5px per sec
+                hitCounter = 0    // Reset de hitCounter
+                console.log("Score speler 4: " + speler4Count)
+                resetBal(verliezer)
+            }
+
+            function resetBal(verliezer){
+                if (verliezer == "platformRechts"){
+                    lastHit = "platformRechts"
+                    x = (w/100)*75    // Set bal X-as positie
+                    y = h/2     // Set bal Y-as positie
+                    mijnCanvasje.onclick = function beginSpelLinks() {      //De functie beginSpelRechts() uitvoeren als er op het canvas geklikt wordt
+                        if (anderGetal == 0) {      //Deze if zorgt er voor dat je maar één keer de onclick actie kan uitvoeren
+                            stapX = -(canvasWidth/100)*1
+                            stapY = -(canvasWidth/100)*1
+                            anderGetal = 1
+                        }
+                    }
+                }
+                if (verliezer == "platformLinks"){
+                    lastHit = "platformLinks"
+                    x = (w/100)*25  // Set bal X-as positie
+                    y = h/2     // Set bal Y-as positie
+                    mijnCanvasje.onclick = function beginSpelRechts() {     //De functie beginSpelRechts() uitvoeren als er op het canvas geklikt wordt
+                        if (anderGetal == 0) {      //Deze if zorgt er voor dat je maar één keer de onclick actie kan uitvoeren
+                            stapX = (canvasWidth/100)*1
+                            stapY = (canvasWidth/100)*1
+                            anderGetal = 1
+                        }
+                    }
+                }
+                if (verliezer == "platformBoven"){
+                    lastHit = "PlatformBoven"
+                    x = w/2    // Set bal X-as positie
+                    y = (h/100)*25     // Set bal Y-as positie
+                    mijnCanvasje.onclick = function beginSpelBoven() {      //De functie beginSpelRechts() uitvoeren als er op het canvas geklikt wordt
+                        if (anderGetal == 0) {      //Deze if zorgt er voor dat je maar één keer de onclick actie kan uitvoeren
+                            stapX = (canvasWidth/100)*1
+                            stapY = (canvasWidth/100)*1
+                            anderGetal = 1
+                        }
+                    }
+                }
+                if (verliezer == "platformOnder"){
+                    lastHit = "platformOnder"
+                    x = w/2    // Set bal X-as positie
+                    y = (h/100)*75     // Set bal Y-as positie
+                    mijnCanvasje.onclick = function beginSpelOnder() {      //De functie beginSpelRechts() uitvoeren als er op het canvas geklikt wordt
+                        if (anderGetal == 0) {      //Deze if zorgt er voor dat je maar één keer de onclick actie kan uitvoeren
+                            stapX = -(canvasWidth/100)*1
+                            stapY = -(canvasWidth/100)*1
+                            anderGetal = 1
+                        }
                     }
                 }
             }
         }
    }
+
+    //-------------------------------------------------------------------------------//
+    //De bal sneller laten bewegen
+    //-------------------------------------------------------------------------------//
+
     function balSneller() {    // De snelheid van de bal met 2px verhogen
         if (stapX > 0) {  // Checken of de X-coördinaat van de bal naar rechts gaat
             stapX+=2
@@ -386,126 +530,3 @@
             stapY-=2
         }
    }
-//$(function() {
-//
-//	// Initialize the Reveal.js library with the default config options
-//	// See more here https://github.com/hakimel/reveal.js#configuration
-//
-//	Reveal.initialize({
-//		history: true		// Every slide will change the URL
-//	});
-//
-//	// Connect to the socket
-//
-//	var socket = io();
-//
-//	// Variable initialization
-//
-//	var form = $('form.login');
-//	var secretTextBox = form.find('input[type=text]');
-//	var presentation = $('.reveal');
-//
-//	var key = "", animationTimeout;
-//
-//	// When the page is loaded it asks you for a key and sends it to the server
-//
-//	form.submit(function(e){
-//
-//		e.preventDefault();
-//
-//		key = secretTextBox.val().trim();
-//
-//		// If there is a key, send it to the server-side
-//		// through the socket.io channel with a 'load' event.
-//
-//		if(key.length) {
-//			socket.emit('load', {
-//				key: key
-//			});
-//		}
-//
-//	});
-//
-//	// The server will either grant or deny access, depending on the secret key
-//
-//	socket.on('access', function(data){
-//
-//		// Check if we have "granted" access.
-//		// If we do, we can continue with the presentation.
-//
-//		if(data.access === "granted") {
-//
-//			// Unblur everything
-//			presentation.removeClass('blurred');
-//
-//			form.hide();
-//            var theContext = startDrawing("mijnCanvasje")
-//            var x = 100;  // houdt de veranderende horizontale positie bij
-//            var y = 100;  // houd de veranderende verticale positie bij
-//              function drawDisc( x,y,r ) {  // Tekent de bal
-//                  theContext.beginPath();
-//                  theContext.arc(x,y,r,0,Math.PI*2,false);
-//                  theContext.closePath();
-//                  theContext.fill();
-//               }
-//
-//			var ignore = false;
-//
-//			$(window).on('hashchange', function(){
-//
-//				// Notify other clients that we have navigated to a new slide
-//				// by sending the "slide-changed" message to socket.io
-//
-//				if(ignore){
-//					// You will learn more about "ignore" in a bit
-//					return;
-//				}
-//
-//				var hash = window.location.hash;
-//
-//				socket.emit('slide-changed', {
-//					hash: hash,
-//					key: key
-//				});
-//			});
-//
-//			socket.on('navigate', function(data){
-//	
-//				// Another device has changed its slide. Change it in this browser, too:
-//
-//				window.location.hash = data.hash;
-//
-//				// The "ignore" variable stops the hash change from
-//				// triggering our hashchange handler above and sending
-//				// us into a never-ending cycle.
-//
-//				ignore = true;
-//
-//				setInterval(function () {
-//					ignore = false;
-//				},100);
-//
-//			});
-//
-//		}
-//		else {
-//
-//			// Wrong secret key
-//
-//			clearTimeout(animationTimeout);
-//
-//			// Addding the "animation" class triggers the CSS keyframe
-//			// animation that shakes the text input.
-//
-//			secretTextBox.addClass('denied animation');
-//			
-//			animationTimeout = setTimeout(function(){
-//				secretTextBox.removeClass('animation');
-//			}, 1000);
-//
-//			form.show();
-//		}
-//
-//	});
-//
-//});
