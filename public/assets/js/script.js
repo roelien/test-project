@@ -106,8 +106,8 @@
     var speler4Count = 0
     var beginCount = 0
     var lastHit = "platformLinks"
-    var speler3Active = false
-    var speler4Active = false
+    var speler3Active = true
+    var speler4Active = true
     
     setInterval( maakSpel, 40 )   // 40 frames per seconde
    
